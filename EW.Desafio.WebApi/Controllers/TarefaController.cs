@@ -1,28 +1,23 @@
 ﻿using EW.Desafio.WebApi.Enums;
 using EW.Desafio.WebApi.Models;
+using EW.Desafio.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 
 namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class TarefaController : ControllerBase
+    [Route("api/tarefas")]
+    public class TarefaController(ITarefaService tarefaService) : ControllerBase
     {
-        private readonly ApiContext _context;
-
-        public TarefaController(ApiContext context)
-        {
-            _context = context;
-        }
+        private readonly ITarefaService _tarefaService = tarefaService;
 
         [HttpGet]
         [ProducesResponseType<Tarefa>(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Tarefa>>> GetTarefas()
         {
-            return Ok(await _context.Tarefas.ToListAsync());
+            return await _tarefaService.ObtenhaTarefas();
         }
 
         [HttpGet("{id}")]
@@ -30,22 +25,15 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Tarefa>> GetTarefa(long id)
         {
-            var tarefa = await _context.Tarefas.FindAsync(id);
-
-            if (tarefa == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(tarefa);
+            return await _tarefaService.ObtenhaTarefaPeloId(id);
         }
 
-        [HttpGet("ListagemDeTarefasPorProjeto/{projetoId}")]
+        [HttpGet("projeto/{projetoId}")]
         [ProducesResponseType<Tarefa>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Tarefa>>> ListagemDeTarefasPorProjeto(long projetoId)
+        public async Task<ActionResult<IEnumerable<Tarefa>>> GetTarefasPorProjeto(long projetoId)
         {
-            return await _context.Tarefas.Where(x => x.ProjetoId == projetoId).ToListAsync();
+            return await _tarefaService.ListagemDeTarefasPorProjeto(projetoId);
         }
 
         [HttpPost]
@@ -55,21 +43,7 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Tarefa>> PostTarefa(Tarefa tarefa)
         {
-            if (tarefa.ProjetoId <= 0)
-            {
-                return BadRequest("O Id do projeto deve ser informado.");
-            }
-
-            var projeto = await _context.Projetos.FindAsync(tarefa.ProjetoId);
-            if (projeto == null)
-            {
-                return NotFound("O Id do projeto informado não existe.");
-            }
-
-            _context.Tarefas.Add(tarefa);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTarefa", new { id = tarefa.Id }, tarefa);
+            return await _tarefaService.CadastrarTarefa(tarefa);
         }
 
         [HttpPut("{id}/status")]
@@ -78,35 +52,9 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutTarefa(long id, [RequiredAttribute] Status status)
+        public async Task<IActionResult> PutTarefaAlteracaoStatus(long id, [RequiredAttribute] Status status)
         {
-            var tarefa = await _context.Tarefas.FindAsync(id);
-
-            if (tarefa == null)
-            {
-                return NotFound();
-            }
-
-            tarefa.Status = status;
-            _context.Entry(tarefa).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TarefaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _tarefaService.AlterarStatusTarefa(id, status);
         }
 
         [HttpPut("{id}/descricao")]
@@ -115,35 +63,9 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutTarefa(long id, [RequiredAttribute] string descricao)
+        public async Task<IActionResult> PutTarefaAlteracaoDescricao(long id, [RequiredAttribute] string descricao)
         {
-            var tarefa = await _context.Tarefas.FindAsync(id);
-
-            if (tarefa == null)
-            {
-                return NotFound();
-            }
-
-            tarefa.Descricao = descricao;
-            _context.Entry(tarefa).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TarefaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _tarefaService.AlterarDescricaoTarefa(id, descricao);
         }
 
         [HttpDelete("{id}")]
@@ -154,21 +76,8 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTarefa(long id)
         {
-            var produto = await _context.Tarefas.FindAsync(id);
-            if (produto == null)
-            {
-                return NotFound("O Id da tarefa informado não existe.");
-            }
-
-            _context.Tarefas.Remove(produto);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _tarefaService.DeletarTarefa(id);
         }
 
-        private bool TarefaExists(long id)
-        {
-            return _context.Tarefas.Any(e => e.Id == id);
-        }
     }
 }

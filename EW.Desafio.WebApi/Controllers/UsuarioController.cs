@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/usuarios")]
     public class UsuarioController(IUsuarioService usuarioService) : ControllerBase
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
@@ -14,7 +14,7 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType<Usuario>(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return await _usuarioService.GetUsuarios();
+            return await _usuarioService.ObtenhaUsuarios();
         }
 
         [HttpGet("{id}")]
@@ -22,7 +22,7 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Usuario>> GetUsuario(long id)
         {
-            return await _usuarioService.GetUsuario(id);
+            return await _usuarioService.ObtenhaUsuarioPeloId(id);
         }
     }
 }

@@ -13,6 +13,10 @@ builder.Services.AddDbContext<ApiContext>(
 // Register interfaces and implementations.
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProjetoService, ProjetoService>();
+builder.Services.AddScoped<IProjetoRepository, ProjetoRepository>();
+builder.Services.AddScoped<ITarefaService, TarefaService>();
+builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>

@@ -5,7 +5,7 @@ namespace EW.Desafio.WebApi.Services
 {
     public interface IUsuarioService
     {
-        Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios();
-        Task<ActionResult<Usuario>> GetUsuario(long id);
+        Task<ActionResult<IEnumerable<Usuario>>> ObtenhaUsuarios();
+        Task<ActionResult<Usuario>> ObtenhaUsuarioPeloId(long id);
     }
 }

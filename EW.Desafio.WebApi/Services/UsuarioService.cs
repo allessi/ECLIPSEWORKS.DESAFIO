@@ -5,15 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EW.Desafio.WebApi.Services
 {
-    public class UsuarioService : BaseService, IUsuarioService
+    public class UsuarioService(IUsuarioRepository usuarioRepository) : BaseService, IUsuarioService
     {
-        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository)
-        {
-            _usuarioRepository = usuarioRepository;
-        }
-        public async Task<ActionResult<Usuario>> GetUsuario(long id)
+        public async Task<ActionResult<Usuario>> ObtenhaUsuarioPeloId(long id)
         {
             try
             {
@@ -29,7 +25,7 @@ namespace EW.Desafio.WebApi.Services
             }
         }
 
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<Usuario>>> ObtenhaUsuarios()
         {
             try
             {

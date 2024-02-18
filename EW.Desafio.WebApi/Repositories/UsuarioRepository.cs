@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EW.Desafio.WebApi.Repositories
 {
-    public class UsuarioRepository : IUsuarioRepository
+    public class UsuarioRepository(ApiContext context) : IUsuarioRepository
     {
-        private readonly ApiContext _context;
-
-        public UsuarioRepository(ApiContext context)
-        {
-            _context = context;
-        }
+        private readonly ApiContext _context = context;
 
         public async Task<Usuario> ObtenhaUsuarioPeloId(long id)
         {
