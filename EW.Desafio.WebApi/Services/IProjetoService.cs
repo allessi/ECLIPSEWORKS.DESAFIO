@@ -9,5 +9,6 @@ namespace EW.Desafio.WebApi.Services
         Task<ActionResult<Projeto>> ObtenhaProjetoPeloId(long id);
         Task<ActionResult<IEnumerable<Projeto>>> ObtenhaProjetoPeloUsario(long usuarioId);
         Task<ActionResult<Projeto>> CadastrarProjeto(Projeto projeto);
+        Task<IActionResult> DeletarProjeto(long id);
     }
 }

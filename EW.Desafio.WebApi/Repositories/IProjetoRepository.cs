@@ -8,5 +8,6 @@ namespace EW.Desafio.WebApi.Repositories
         Task<IEnumerable<Projeto>> ObtenhaProjetos();
         Task<IEnumerable<Projeto>> ObtenhaProjetoPeloUsario(long usuarioId);
         Task Cadastrar(Projeto projeto);
+        Task Deletar(Projeto projeto);
     }
 }

@@ -29,5 +29,11 @@ namespace EW.Desafio.WebApi.Repositories
             _context.Projetos.Add(projeto);
             await _context.SaveChangesAsync();
         }
+
+        public async Task Deletar(Projeto projeto)
+        {
+            _context.Projetos.Remove(projeto);
+            await _context.SaveChangesAsync();
+        }
     }
 }

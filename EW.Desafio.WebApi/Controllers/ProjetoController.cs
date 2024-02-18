@@ -44,5 +44,16 @@ namespace EW.Desafio.WebApi.Controllers
         {
             return await _projetoService.CadastrarProjeto(projeto);
         }
+
+        [HttpDelete("{id}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteProjeto(long id)
+        {
+            return await _projetoService.DeletarProjeto(id);
+        }
     }
 }

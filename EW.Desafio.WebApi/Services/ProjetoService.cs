@@ -1,4 +1,5 @@
-﻿using EW.Desafio.WebApi.Models;
+﻿using EW.Desafio.WebApi.Enums;
+using EW.Desafio.WebApi.Models;
 using EW.Desafio.WebApi.Repositories;
 using EW.Desafio.WebApi.Uteis.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,7 @@ namespace EW.Desafio.WebApi.Services
                 {
                     return BadRequest("O Id do usuário deve ser informado.");
                 }
-                var projeto = await _projetoRepository.ObtenhaProjetoPeloId(id);
-                var tarefas = await _tarefaRepository.ObtenhaTarefas();
-                projeto.Tarefas = tarefas.Where(x => x.ProjetoId == id).ToList();
-                return Ok(projeto);
+                return Ok(await ObtenhaProjetoPorId(id));
             }
             catch (ConceitoNaoEncontradoException ex)
             {
@@ -78,19 +76,24 @@ namespace EW.Desafio.WebApi.Services
         {
             try
             {
-                var projetos = await _projetoRepository.ObtenhaProjetos();
-                var tarefas = await _tarefaRepository.ObtenhaTarefas();
-                projetos.ToList().ForEach(projeto =>
-                {
-                    var tarefasDoProjeto = tarefas.ToList().FindAll(x => x.ProjetoId == projeto.Id);
-                    projeto.Tarefas = tarefasDoProjeto;
-                });
-                return Ok(projetos);
+                return Ok(await ObtenhaTodosProjetos());
             }
             catch (Exception)
             {
                 return DefaultError();
             }
+        }
+
+        private async Task<IEnumerable<Projeto>> ObtenhaTodosProjetos()
+        {
+            var projetos = await _projetoRepository.ObtenhaProjetos();
+            var tarefas = await _tarefaRepository.ObtenhaTarefas();
+            projetos.ToList().ForEach(projeto =>
+            {
+                var tarefasDoProjeto = tarefas.ToList().FindAll(x => x.ProjetoId == projeto.Id);
+                projeto.Tarefas = tarefasDoProjeto;
+            });
+            return projetos;
         }
 
         public async Task<ActionResult<Projeto>> CadastrarProjeto(Projeto projeto)
@@ -118,6 +121,44 @@ namespace EW.Desafio.WebApi.Services
             {
                 return DefaultError();
             }
+        }
+
+        public async Task<IActionResult> DeletarProjeto(long id)
+        {
+            try
+            {
+                var projeto = await ObtenhaProjetoPorId(id);
+
+                // valida se todas as tarefas associadas estão concluídas.
+                if (ProjetoPossuiTarefasPendentes(projeto))
+                    return BadRequest("O projeto não pode ser excluído, pois contém tarefas pendentes.");
+
+                // efetua a exclusão
+                await _projetoRepository.Deletar(projeto);
+
+                return NoContent();
+            }
+            catch (ConceitoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return DefaultError();
+            }
+        }
+
+        private bool ProjetoPossuiTarefasPendentes(Projeto projeto)
+        {
+            return projeto.Tarefas != null && projeto.Tarefas.Any(p => p.Status == Status.Pendente);
+        }
+
+        private async Task<Projeto> ObtenhaProjetoPorId(long id)
+        {
+            var projeto = await _projetoRepository.ObtenhaProjetoPeloId(id);
+            var tarefas = await _tarefaRepository.ObtenhaTarefas();
+            projeto.Tarefas = tarefas.Where(x => x.ProjetoId == id).ToList();
+            return projeto;
         }
     }
 }
