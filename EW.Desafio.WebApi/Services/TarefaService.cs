@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EW.Desafio.WebApi.Services
 {
-    public class TarefaService(ITarefaRepository tarefaRepository, IProjetoRepository projetoRepository)
+    public class TarefaService(
+        ITarefaRepository tarefaRepository,
+        IProjetoRepository projetoRepository,
+        ITarefaHistoricoAtualizacaoService tarefaHistoricoAtualizacaoService)
         : BaseService, ITarefaService
     {
         private readonly ITarefaRepository _tarefaRepository = tarefaRepository;
         private readonly IProjetoRepository _projetoRepository = projetoRepository;
+        private readonly ITarefaHistoricoAtualizacaoService _tarefaHistoricoAtualizacaoService = tarefaHistoricoAtualizacaoService;
+
 
         public async Task<ActionResult<Tarefa>> CadastrarTarefa(Tarefa tarefa)
         {
@@ -22,6 +27,9 @@ namespace EW.Desafio.WebApi.Services
 
                 // salva a tarefa.
                 await _tarefaRepository.Cadastrar(tarefa);
+
+                // salva histórico do cadastro
+                await _tarefaHistoricoAtualizacaoService.SalvarHistorico(null, tarefa);
 
                 return CreatedAtAction("GetTarefa", new { id = tarefa.Id }, tarefa);
             }
@@ -75,14 +83,101 @@ namespace EW.Desafio.WebApi.Services
             }
         }
 
+        public async Task<IActionResult> AlterarTarefa(long id, Tarefa dadosTarefa)
+        {
+            try
+            {
+                if (id != dadosTarefa.Id) return BadRequest("Os ids informados no parâmetro e no corpo estão inconsistentes.");
+
+                var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
+                var tarefaAntiga = new Tarefa
+                {
+                    ProjetoId = tarefa.ProjetoId,
+                    Id = tarefa.Id,
+                    Titulo = tarefa.Titulo,
+                    Descricao = tarefa.Descricao,
+                    Prioridade = tarefa.Prioridade,
+                    DataVencimento = tarefa.DataVencimento,
+                    Status = tarefa.Status
+                };
+
+                var tarefaNova = new Tarefa
+                {
+                    ProjetoId = dadosTarefa.ProjetoId,
+                    Id = dadosTarefa.Id,
+                    Titulo = dadosTarefa.Titulo,
+                    Descricao = dadosTarefa.Descricao,
+                    Prioridade = dadosTarefa.Prioridade,
+                    DataVencimento = dadosTarefa.DataVencimento,
+                    Status = dadosTarefa.Status
+                };
+
+                // valida se a prioridade foi alterada.
+                if (tarefaAntiga.Prioridade != tarefaNova.Prioridade)
+                {
+                    return BadRequest("A prioridade da tarefa não pode ser alterada.");
+                } // valida se o id do projeto foi alterado.
+                else if (tarefaAntiga.ProjetoId != tarefaNova.ProjetoId)
+                {
+                    return BadRequest("O projeto da tarefa não pode ser alterado.");
+                }
+
+                tarefa.Titulo = dadosTarefa.Titulo;
+                tarefa.Descricao = dadosTarefa.Descricao;
+                tarefa.DataVencimento = dadosTarefa.DataVencimento;
+                tarefa.Status = dadosTarefa.Status;
+
+                // altera todos os dados da tarefa.
+                await _tarefaRepository.Alterar(tarefa);
+
+                // salva histórico da alteração
+                await _tarefaHistoricoAtualizacaoService.SalvarHistorico(tarefaAntiga, tarefaNova);
+
+                return NoContent();
+            }
+            catch (ConceitoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return DefaultError();
+            }
+        }
+
         public async Task<IActionResult> AlterarStatusTarefa(long id, Status status)
         {
             try
             {
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
+                var tarefaAntiga = new Tarefa
+                {
+                    ProjetoId = tarefa.ProjetoId,
+                    Id = tarefa.Id,
+                    Titulo = tarefa.Titulo,
+                    Descricao = tarefa.Descricao,
+                    Prioridade = tarefa.Prioridade,
+                    DataVencimento = tarefa.DataVencimento,
+                    Status = tarefa.Status
+                };
+
+                var tarefaNova = new Tarefa
+                {
+                    ProjetoId = tarefaAntiga.ProjetoId,
+                    Id = tarefaAntiga.Id,
+                    Titulo = tarefaAntiga.Titulo,
+                    Descricao = tarefaAntiga.Descricao,
+                    Prioridade = tarefaAntiga.Prioridade,
+                    DataVencimento = tarefaAntiga.DataVencimento,
+                    Status = status
+                };
                 tarefa.Status = status;
 
+                // altera o status
                 await _tarefaRepository.Alterar(tarefa);
+
+                // salva histórico da alteração
+                await _tarefaHistoricoAtualizacaoService.SalvarHistorico(tarefaAntiga, tarefaNova);
 
                 return NoContent();
             }
@@ -101,9 +196,34 @@ namespace EW.Desafio.WebApi.Services
             try
             {
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
+                var tarefaAntiga = new Tarefa
+                {
+                    ProjetoId = tarefa.ProjetoId,
+                    Id = tarefa.Id,
+                    Titulo = tarefa.Titulo,
+                    Descricao = tarefa.Descricao,
+                    Prioridade = tarefa.Prioridade,
+                    DataVencimento = tarefa.DataVencimento,
+                    Status = tarefa.Status
+                };
+
+                var tarefaNova = new Tarefa
+                {
+                    ProjetoId = tarefaAntiga.ProjetoId,
+                    Id = tarefaAntiga.Id,
+                    Titulo = tarefaAntiga.Titulo,
+                    Descricao = descricao,
+                    Prioridade = tarefaAntiga.Prioridade,
+                    DataVencimento = tarefaAntiga.DataVencimento,
+                    Status = tarefaAntiga.Status
+                };
                 tarefa.Descricao = descricao;
 
+                // altera o status
                 await _tarefaRepository.Alterar(tarefa);
+
+                // salva histórico da alteração
+                await _tarefaHistoricoAtualizacaoService.SalvarHistorico(tarefaAntiga, tarefaNova);
 
                 return NoContent();
             }
@@ -124,6 +244,8 @@ namespace EW.Desafio.WebApi.Services
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
                 await _tarefaRepository.Deletar(tarefa);
 
+                // salva histórico da exclusão
+                await _tarefaHistoricoAtualizacaoService.SalvarHistorico(tarefa, null);
                 return NoContent();
             }
             catch (ConceitoNaoEncontradoException ex)

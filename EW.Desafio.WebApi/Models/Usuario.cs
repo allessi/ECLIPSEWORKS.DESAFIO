@@ -7,5 +7,6 @@ namespace EW.Desafio.WebApi.Models
         [Key]
         public required long Id { get; set; }
         public string Nome { get; set; } = string.Empty;
+        public bool PossuiCargoGerencia { get; set; }
     }
 }

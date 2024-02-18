@@ -46,6 +46,17 @@ namespace EW.Desafio.WebApi.Controllers
             return await _tarefaService.CadastrarTarefa(tarefa);
         }
 
+        [HttpPut("{id}/tarefa")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutTarefaAlteracaoStatus(long id, [RequiredAttribute] Tarefa tarefa)
+        {
+            return await _tarefaService.AlterarTarefa(id, tarefa);
+        }
+
         [HttpPut("{id}/status")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]

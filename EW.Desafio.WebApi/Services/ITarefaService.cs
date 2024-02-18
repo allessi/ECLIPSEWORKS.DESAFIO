@@ -10,6 +10,7 @@ namespace EW.Desafio.WebApi.Services
         Task<ActionResult<Tarefa>> ObtenhaTarefaPeloId(long id);
         Task<ActionResult<IEnumerable<Tarefa>>> ListagemDeTarefasPorProjeto(long projetoId);
         Task<ActionResult<Tarefa>> CadastrarTarefa(Tarefa tarefa);
+        Task<IActionResult> AlterarTarefa(long id, Tarefa tarefa);
         Task<IActionResult> AlterarStatusTarefa(long id, Status status);
         Task<IActionResult> AlterarDescricaoTarefa(long id, string descricao);
         Task<IActionResult> DeletarTarefa(long id);

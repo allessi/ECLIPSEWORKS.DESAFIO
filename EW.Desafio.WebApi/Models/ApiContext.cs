@@ -9,6 +9,9 @@ namespace EW.Desafio.WebApi.Models
         public DbSet<Projeto> Projetos { get; set; }
 
         public DbSet<Tarefa> Tarefas { get; set; }
+
+        public DbSet<TarefaHistoricoAtualizacao> TarefaHistoricoAtualizacoes { get; set; }
+
         public ApiContext(DbContextOptions<ApiContext> options)
             : base(options)
         {
@@ -35,7 +38,7 @@ namespace EW.Desafio.WebApi.Models
                     new () { Id = 2, Nome = "Maria" },
                     new () { Id = 3, Nome = "Pedro" },
                     new () { Id = 4, Nome = "Sebastião" },
-                    new () { Id = 5, Nome = "Paula" }
+                    new () { Id = 5, Nome = "Paula", PossuiCargoGerencia = true }
                 };
                 Usuarios.AddRange(usuarios);
                 SaveChanges();

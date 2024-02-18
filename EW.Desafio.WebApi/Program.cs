@@ -17,6 +17,8 @@ builder.Services.AddScoped<IProjetoService, ProjetoService>();
 builder.Services.AddScoped<IProjetoRepository, ProjetoRepository>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+builder.Services.AddScoped<ITarefaHistoricoAtualizacaoRepository, TarefaHistoricoAtualizacaoRepository>();
+builder.Services.AddScoped<ITarefaHistoricoAtualizacaoService, TarefaHistoricoAtualizacaoService>();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>

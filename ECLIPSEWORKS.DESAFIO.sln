@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F27EA491-F66
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EW.Desafio.WebApi", "EW.Desafio.WebApi\EW.Desafio.WebApi.csproj", "{E2C3E911-1677-4BE3-B305-96CA22C7E7C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{670D5DC6-6796-4761-AB79-DBFC14A26367}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
