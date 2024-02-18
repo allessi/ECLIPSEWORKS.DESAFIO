@@ -1,25 +1,20 @@
 ﻿using EW.Desafio.WebApi.Models;
+using EW.Desafio.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsuarioController : ControllerBase
+    public class UsuarioController(IUsuarioService usuarioService) : ControllerBase
     {
-        private readonly ApiContext _context;
-
-        public UsuarioController(ApiContext context)
-        {
-            _context = context;
-        }
+        private readonly IUsuarioService _usuarioService = usuarioService;
 
         [HttpGet]
         [ProducesResponseType<Usuario>(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return Ok(await _context.Usuarios.ToListAsync());
+            return await _usuarioService.GetUsuarios();
         }
 
         [HttpGet("{id}")]
@@ -27,15 +22,7 @@ namespace EW.Desafio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Usuario>> GetUsuario(long id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(usuario);
+            return await _usuarioService.GetUsuario(id);
         }
-
     }
 }

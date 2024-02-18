@@ -1,4 +1,6 @@
 using EW.Desafio.WebApi.Models;
+using EW.Desafio.WebApi.Repositories;
+using EW.Desafio.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -7,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApiContext>(
     opt => opt.UseInMemoryDatabase("ApiDb"));
+
+// Register interfaces and implementations.
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
