@@ -131,7 +131,7 @@ namespace EW.Desafio.WebApi.Services
 
                 // valida se todas as tarefas associadas estão concluídas.
                 if (ProjetoPossuiTarefasPendentes(projeto))
-                    return BadRequest("O projeto não pode ser excluído, pois contém tarefas pendentes.");
+                    return BadRequest("O projeto não pode ser excluído, pois contém tarefas pendentes. Conclua ou exclua todas as tarefas primeiro.");
 
                 // efetua a exclusão
                 await _projetoRepository.Deletar(projeto);
@@ -148,9 +148,9 @@ namespace EW.Desafio.WebApi.Services
             }
         }
 
-        private bool ProjetoPossuiTarefasPendentes(Projeto projeto)
+        private static bool ProjetoPossuiTarefasPendentes(Projeto projeto)
         {
-            return projeto.Tarefas != null && projeto.Tarefas.Any(p => p.Status == Status.Pendente);
+            return projeto.Tarefas != null && !projeto.Tarefas.All(p => p.Status == Status.Concluida);
         }
 
         private async Task<Projeto> ObtenhaProjetoPorId(long id)
