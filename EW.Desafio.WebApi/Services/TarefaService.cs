@@ -109,7 +109,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = tarefa.Descricao,
                     Prioridade = tarefa.Prioridade,
                     DataVencimento = tarefa.DataVencimento,
-                    Status = tarefa.Status
+                    Status = tarefa.Status,
+                    Comentarios = tarefa.Comentarios,
                 };
 
                 var tarefaNova = new Tarefa
@@ -121,7 +122,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = dadosTarefa.Descricao,
                     Prioridade = dadosTarefa.Prioridade,
                     DataVencimento = dadosTarefa.DataVencimento,
-                    Status = dadosTarefa.Status
+                    Status = dadosTarefa.Status,
+                    Comentarios = dadosTarefa.Comentarios
                 };
 
                 // valida se a prioridade foi alterada.
@@ -138,6 +140,29 @@ namespace EW.Desafio.WebApi.Services
                 tarefa.Descricao = dadosTarefa.Descricao;
                 tarefa.DataVencimento = dadosTarefa.DataVencimento;
                 tarefa.Status = dadosTarefa.Status;
+
+                if (dadosTarefa.Comentarios != null)
+                {
+                    tarefa.Comentarios ??= new List<TarefaComentario>();
+
+                    foreach (var comentarioTarefa in dadosTarefa.Comentarios)
+                    {
+                        if (!tarefa.Comentarios.Any(x => x.Id == comentarioTarefa.Id))
+                        {
+                            ((List<TarefaComentario>)tarefa.Comentarios).Add(comentarioTarefa);
+                            await _tarefaRepository.CadastrarComentarios(comentarioTarefa);
+                            var novoHistorico = new TarefaHistoricoAtualizacao()
+                            {
+                                DataModificacao = DateTime.Now,
+                                Status = dadosTarefa.Status,
+                                TarefaId = dadosTarefa.Id,
+                                UsuarioId = dadosTarefa.UsuarioId,
+                                Alteracao = $"Tarefa: {dadosTarefa.Id}. Id do Projeto: {dadosTarefa.ProjetoId}. Comentário adicionado: {comentarioTarefa.Comententario}"
+                            };
+                            await _tarefaHistoricoAtualizacaoService.SalvarHistorico(novoHistorico);
+                        }
+                    }
+                }
 
                 // altera todos os dados da tarefa.
                 await _tarefaRepository.Alterar(tarefa);
@@ -171,7 +196,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = tarefa.Descricao,
                     Prioridade = tarefa.Prioridade,
                     DataVencimento = tarefa.DataVencimento,
-                    Status = tarefa.Status
+                    Status = tarefa.Status,
+                    Comentarios = tarefa.Comentarios
                 };
 
                 var tarefaNova = new Tarefa
@@ -183,7 +209,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = tarefaAntiga.Descricao,
                     Prioridade = tarefaAntiga.Prioridade,
                     DataVencimento = tarefaAntiga.DataVencimento,
-                    Status = status
+                    Status = status,
+                    Comentarios = tarefaAntiga.Comentarios
                 };
                 tarefa.Status = status;
 
@@ -219,7 +246,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = tarefa.Descricao,
                     Prioridade = tarefa.Prioridade,
                     DataVencimento = tarefa.DataVencimento,
-                    Status = tarefa.Status
+                    Status = tarefa.Status,
+                    Comentarios = tarefa.Comentarios
                 };
 
                 var tarefaNova = new Tarefa
@@ -231,7 +259,8 @@ namespace EW.Desafio.WebApi.Services
                     Descricao = descricao,
                     Prioridade = tarefaAntiga.Prioridade,
                     DataVencimento = tarefaAntiga.DataVencimento,
-                    Status = tarefaAntiga.Status
+                    Status = tarefaAntiga.Status,
+                    Comentarios = tarefaAntiga.Comentarios
                 };
                 tarefa.Descricao = descricao;
 

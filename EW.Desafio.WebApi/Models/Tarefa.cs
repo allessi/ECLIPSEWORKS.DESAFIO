@@ -24,5 +24,7 @@ namespace EW.Desafio.WebApi.Models
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Prioridade Prioridade { get; set; }
+
+        public IEnumerable<TarefaComentario>? Comentarios { get; set; }
     }
 }

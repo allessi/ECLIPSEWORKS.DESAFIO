@@ -10,22 +10,41 @@ namespace EW.Desafio.WebApi.Repositories
 
         public async Task<IEnumerable<Tarefa>> ObtenhaTarefasPeloProjeto(long projetoId)
         {
-            return await _context.Tarefas.Where(x => x.ProjetoId == projetoId).ToListAsync();
+            var tarefas = await _context.Tarefas.Where(x => x.ProjetoId == projetoId).ToListAsync();
+            foreach (var tarefa in tarefas)
+            {
+                tarefa.Comentarios = await _context.TarefaComentarios.Where(x => x.TarefaId == tarefa.Id).ToListAsync();
+            }
+
+            return tarefas;
         }
 
         public async Task<Tarefa> ObtenhaTarefaPeloId(long id)
         {
-            return await _context.Tarefas.FindAsync(id) ?? throw new ConceitoNaoEncontradoException("Tarefa não encontrada!");
+            var tarefa = await _context.Tarefas.FindAsync(id) ?? throw new ConceitoNaoEncontradoException("Tarefa não encontrada!");
+            tarefa.Comentarios = await _context.TarefaComentarios.Where(x => x.TarefaId == id).ToListAsync();
+            return tarefa;
         }
 
         public async Task<IEnumerable<Tarefa>> ObtenhaTarefas()
         {
-            return await _context.Tarefas.ToListAsync();
+            var tarefas = await _context.Tarefas.ToListAsync();
+            foreach (var tarefa in tarefas)
+            {
+                tarefa.Comentarios = await _context.TarefaComentarios.Where(x => x.TarefaId == tarefa.Id).ToListAsync();
+            }
+            return tarefas;
         }
 
         public async Task Cadastrar(Tarefa tarefa)
         {
             _context.Tarefas.Add(tarefa);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CadastrarComentarios(TarefaComentario tarefaComentario)
+        {
+            _context.TarefaComentarios.Add(tarefaComentario);
             await _context.SaveChangesAsync();
         }
 
@@ -59,5 +78,6 @@ namespace EW.Desafio.WebApi.Repositories
         {
             return _context.Tarefas.Any(e => e.Id == id);
         }
+
     }
 }

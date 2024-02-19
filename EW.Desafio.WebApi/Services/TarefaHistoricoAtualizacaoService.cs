@@ -69,6 +69,19 @@ namespace EW.Desafio.WebApi.Services
             }
         }
 
+        public async Task<IActionResult> SalvarHistorico(TarefaHistoricoAtualizacao tarefaHistoricoAtualizacao)
+        {
+            try
+            {
+                await _tarefaHistoricoAtualizacaoRepository.Salvar(tarefaHistoricoAtualizacao);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return DefaultError();
+            }
+        }
+
         private TarefaHistoricoAtualizacao TarefaHistoricoAtualizacao(string alteracao, Tarefa? tarefaAntes, Tarefa? tarefaDepois)
         {
             return new TarefaHistoricoAtualizacao()

@@ -7,5 +7,6 @@ namespace EW.Desafio.WebApi.Services
     {
         Task<IActionResult> SalvarHistorico(Tarefa? tarefaAntes, Tarefa? tarefaDepois);
         Task<ActionResult<IEnumerable<TarefaHistoricoAtualizacao>>> ObtenhaTarefasConcluidas();
+        Task<IActionResult> SalvarHistorico(TarefaHistoricoAtualizacao tarefaHistoricoAtualizacao);
     }
 }

@@ -16,6 +16,6 @@ namespace EW.Desafio.WebApi.Models
         public required DateTime DataModificacao { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public required Status Status { get; set; }
-        public string Alteracao { get; set; } = string.Empty;
+        public required string Alteracao { get; set; }
     }
 }

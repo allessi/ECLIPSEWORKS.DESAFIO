@@ -12,6 +12,8 @@ namespace EW.Desafio.WebApi.Models
 
         public DbSet<TarefaHistoricoAtualizacao> TarefaHistoricoAtualizacoes { get; set; }
 
+        public DbSet<TarefaComentario> TarefaComentarios { get; set; }
+
         public ApiContext(DbContextOptions<ApiContext> options)
             : base(options)
         {

@@ -10,5 +10,6 @@ namespace EW.Desafio.WebApi.Repositories
         Task Alterar(Tarefa tarefa);
         Task Cadastrar(Tarefa tarefa);
         Task Deletar(Tarefa tarefa);
+        Task CadastrarComentarios(TarefaComentario tarefaComentario);
     }
 }
