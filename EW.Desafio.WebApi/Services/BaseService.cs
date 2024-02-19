@@ -17,5 +17,5 @@ namespace EW.Desafio.WebApi.Services
 
     }
 
-    public record ResultError(int statusCode, string mensagem);
+    public record ResultError(int StatusCode, string Mensagem);
 }

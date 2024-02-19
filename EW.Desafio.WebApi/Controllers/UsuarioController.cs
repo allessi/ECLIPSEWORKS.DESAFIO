@@ -6,7 +6,11 @@ namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
     [Route("api/usuarios")]
-    public class UsuarioController(IUsuarioService usuarioService) : ControllerBase
+    public class UsuarioController(
+        IUsuarioService usuarioService,
+        IAutorizacaoService autorizacaoService,
+        ApiContext context)
+        : ControllerBaseApi(context, autorizacaoService)
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
 

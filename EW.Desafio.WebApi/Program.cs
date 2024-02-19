@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApiContext>(
     opt => opt.UseInMemoryDatabase("ApiDb"));
 
 // Register interfaces and implementations.
+builder.Services.AddScoped<IAutorizacaoService, AutorizacaoService>();
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IProjetoService, ProjetoService>();

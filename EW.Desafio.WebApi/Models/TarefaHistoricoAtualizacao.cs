@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EW.Desafio.WebApi.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace EW.Desafio.WebApi.Models
 {
@@ -12,6 +14,8 @@ namespace EW.Desafio.WebApi.Models
         [ForeignKey("Usuario")]
         public required long UsuarioId { get; set; }
         public required DateTime DataModificacao { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public required Status Status { get; set; }
         public string Alteracao { get; set; } = string.Empty;
     }
 }

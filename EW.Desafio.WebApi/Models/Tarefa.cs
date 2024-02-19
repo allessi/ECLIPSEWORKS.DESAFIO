@@ -12,6 +12,8 @@ namespace EW.Desafio.WebApi.Models
 
         [ForeignKey("Projeto")]
         public required long ProjetoId { get; set; }
+        [ForeignKey("Usuario")]
+        public required long UsuarioId { get; set; }
 
         public string Titulo { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;

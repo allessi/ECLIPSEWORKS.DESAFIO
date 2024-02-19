@@ -7,7 +7,11 @@ namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
     [Route("api/projetos")]
-    public class ProjetoController(IProjetoService projetoService) : ControllerBase
+    public class ProjetoController(
+        IProjetoService projetoService,
+        IAutorizacaoService autorizacaoService,
+        ApiContext context)
+        : ControllerBaseApi(context, autorizacaoService)
     {
         private readonly IProjetoService _projetoService = projetoService;
 

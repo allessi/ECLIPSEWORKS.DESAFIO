@@ -1,16 +1,29 @@
 ﻿using EW.Desafio.WebApi.Models;
 using EW.Desafio.WebApi.Repositories;
 using EW.Desafio.WebApi.Uteis.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EW.Desafio.WebApi.Services
 {
     public class TarefaHistoricoAtualizacaoService(
         ITarefaHistoricoAtualizacaoRepository tarefaHistoricoAtualizacaoRepository)
-        : ITarefaHistoricoAtualizacaoService
+        : BaseService, ITarefaHistoricoAtualizacaoService
     {
         private readonly ITarefaHistoricoAtualizacaoRepository _tarefaHistoricoAtualizacaoRepository = tarefaHistoricoAtualizacaoRepository;
 
-        public async Task SalvarHistorico(Tarefa? tarefaAntes, Tarefa? tarefaDepois)
+        public async Task<ActionResult<IEnumerable<TarefaHistoricoAtualizacao>>> ObtenhaTarefasConcluidas()
+        {
+            try
+            {
+                return Ok(await _tarefaHistoricoAtualizacaoRepository.ObtenhaHistoricoAtualizacaoTarefas());
+            }
+            catch (Exception)
+            {
+                return DefaultError();
+            }
+        }
+
+        public async Task<IActionResult> SalvarHistorico(Tarefa? tarefaAntes, Tarefa? tarefaDepois)
         {
             try
             {
@@ -48,10 +61,11 @@ namespace EW.Desafio.WebApi.Services
                 {
                     await _tarefaHistoricoAtualizacaoRepository.Salvar(historicoAtualizacao);
                 }
+                return NoContent();
             }
             catch (Exception)
             {
-                throw;
+                return DefaultError();
             }
         }
 
@@ -63,7 +77,12 @@ namespace EW.Desafio.WebApi.Services
                 TarefaId = tarefaAntes != null ? tarefaAntes.Id :
                         tarefaDepois != null ? tarefaDepois.Id :
                         throw new ConceitoNaoEncontradoException("Tarefa não encontrada!"),
-                UsuarioId = 1, //todo: verificar para obter o usuário que alterou a tarefa
+                UsuarioId = tarefaAntes != null ? tarefaAntes.UsuarioId :
+                        tarefaDepois != null ? tarefaDepois.UsuarioId :
+                        throw new ConceitoNaoEncontradoException("Usuário não encontrado!"),
+                Status = tarefaAntes != null ? tarefaAntes.Status :
+                        tarefaDepois != null ? tarefaDepois.Status :
+                        throw new ConceitoNaoEncontradoException("Status não encontrado!"),
                 Alteracao = alteracao
             };
         }

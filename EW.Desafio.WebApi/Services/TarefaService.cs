@@ -102,6 +102,7 @@ namespace EW.Desafio.WebApi.Services
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
                 var tarefaAntiga = new Tarefa
                 {
+                    UsuarioId = tarefa.UsuarioId,
                     ProjetoId = tarefa.ProjetoId,
                     Id = tarefa.Id,
                     Titulo = tarefa.Titulo,
@@ -113,6 +114,7 @@ namespace EW.Desafio.WebApi.Services
 
                 var tarefaNova = new Tarefa
                 {
+                    UsuarioId = dadosTarefa.UsuarioId,
                     ProjetoId = dadosTarefa.ProjetoId,
                     Id = dadosTarefa.Id,
                     Titulo = dadosTarefa.Titulo,
@@ -162,6 +164,7 @@ namespace EW.Desafio.WebApi.Services
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
                 var tarefaAntiga = new Tarefa
                 {
+                    UsuarioId = tarefa.UsuarioId,
                     ProjetoId = tarefa.ProjetoId,
                     Id = tarefa.Id,
                     Titulo = tarefa.Titulo,
@@ -173,6 +176,7 @@ namespace EW.Desafio.WebApi.Services
 
                 var tarefaNova = new Tarefa
                 {
+                    UsuarioId = tarefaAntiga.UsuarioId,
                     ProjetoId = tarefaAntiga.ProjetoId,
                     Id = tarefaAntiga.Id,
                     Titulo = tarefaAntiga.Titulo,
@@ -208,6 +212,7 @@ namespace EW.Desafio.WebApi.Services
                 var tarefa = await _tarefaRepository.ObtenhaTarefaPeloId(id);
                 var tarefaAntiga = new Tarefa
                 {
+                    UsuarioId = tarefa.UsuarioId,
                     ProjetoId = tarefa.ProjetoId,
                     Id = tarefa.Id,
                     Titulo = tarefa.Titulo,
@@ -219,6 +224,7 @@ namespace EW.Desafio.WebApi.Services
 
                 var tarefaNova = new Tarefa
                 {
+                    UsuarioId = tarefaAntiga.UsuarioId,
                     ProjetoId = tarefaAntiga.ProjetoId,
                     Id = tarefaAntiga.Id,
                     Titulo = tarefaAntiga.Titulo,

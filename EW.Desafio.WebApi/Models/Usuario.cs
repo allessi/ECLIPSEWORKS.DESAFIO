@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EW.Desafio.WebApi.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace EW.Desafio.WebApi.Models
 {
@@ -7,6 +8,6 @@ namespace EW.Desafio.WebApi.Models
         [Key]
         public required long Id { get; set; }
         public string Nome { get; set; } = string.Empty;
-        public bool PossuiCargoGerencia { get; set; }
+        public Funcao Funcao { get; set; } = Funcao.Comum;
     }
 }

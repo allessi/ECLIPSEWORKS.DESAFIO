@@ -9,7 +9,11 @@ namespace EW.Desafio.WebApi.Controllers
 {
     [ApiController]
     [Route("api/tarefas")]
-    public class TarefaController(ITarefaService tarefaService) : ControllerBase
+    public class TarefaController(
+        ITarefaService tarefaService,
+        IAutorizacaoService autorizacaoService,
+        ApiContext context)
+        : ControllerBaseApi(context, autorizacaoService)
     {
         private readonly ITarefaService _tarefaService = tarefaService;
 

@@ -38,7 +38,8 @@ namespace EW.Desafio.WebApi.Models
                     new () { Id = 2, Nome = "Maria" },
                     new () { Id = 3, Nome = "Pedro" },
                     new () { Id = 4, Nome = "Sebastião" },
-                    new () { Id = 5, Nome = "Paula", PossuiCargoGerencia = true }
+                    new () { Id = 5, Nome = "Paula", Funcao = Enums.Funcao.Gerente },
+                    new () { Id = 6, Nome = "Allessi", Funcao = Enums.Funcao.AdministradorSistema },
                 };
                 Usuarios.AddRange(usuarios);
                 SaveChanges();
