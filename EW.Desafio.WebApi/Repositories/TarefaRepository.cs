@@ -8,7 +8,7 @@ namespace EW.Desafio.WebApi.Repositories
     {
         private readonly ApiContext _context = context;
 
-        public async Task<IEnumerable<Tarefa>> ListagemDeTarefasPorProjeto(long projetoId)
+        public async Task<IEnumerable<Tarefa>> ObtenhaTarefasPeloProjeto(long projetoId)
         {
             return await _context.Tarefas.Where(x => x.ProjetoId == projetoId).ToListAsync();
         }

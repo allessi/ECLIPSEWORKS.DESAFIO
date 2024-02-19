@@ -16,6 +16,7 @@ namespace EW.Desafio.WebApi.Services
         private readonly IProjetoRepository _projetoRepository = projetoRepository;
         private readonly ITarefaHistoricoAtualizacaoService _tarefaHistoricoAtualizacaoService = tarefaHistoricoAtualizacaoService;
 
+        private const short QuantidadeMaximaTarefasProjeto = 20;
 
         public async Task<ActionResult<Tarefa>> CadastrarTarefa(Tarefa tarefa)
         {
@@ -23,7 +24,12 @@ namespace EW.Desafio.WebApi.Services
             {
                 // valida dados do projeto
                 if (tarefa.ProjetoId <= 0) return BadRequest("O Id do projeto deve ser informado.");
-                _ = await _projetoRepository.ObtenhaProjetoPeloId(tarefa.ProjetoId);
+                var projeto = await _projetoRepository.ObtenhaProjetoPeloId(tarefa.ProjetoId);
+                projeto.Tarefas = (await _tarefaRepository.ObtenhaTarefasPeloProjeto(tarefa.ProjetoId)).ToList();
+                projeto.Tarefas.Add(tarefa);
+
+                // valida se a quantidade máxima de tarefas por projeto foi estrapolada.
+                _ = PassouQuantidadeMaximaDeTarefasPermitidasNoProjeto(projeto);
 
                 // salva a tarefa.
                 await _tarefaRepository.Cadastrar(tarefa);
@@ -37,6 +43,10 @@ namespace EW.Desafio.WebApi.Services
             {
                 return NotFound(ex.Message);
             }
+            catch (QuantidadeMaximaTarefaPorProjetoException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception)
             {
                 return DefaultError();
@@ -47,7 +57,7 @@ namespace EW.Desafio.WebApi.Services
         {
             try
             {
-                return Ok(await _tarefaRepository.ListagemDeTarefasPorProjeto(projetoId));
+                return Ok(await _tarefaRepository.ObtenhaTarefasPeloProjeto(projetoId));
             }
             catch (Exception)
             {
@@ -256,6 +266,15 @@ namespace EW.Desafio.WebApi.Services
             {
                 return DefaultError();
             }
+        }
+
+        public Task<bool> PassouQuantidadeMaximaDeTarefasPermitidasNoProjeto(Projeto? projeto)
+        {
+            if (projeto?.Tarefas != null && projeto.Tarefas.Count > QuantidadeMaximaTarefasProjeto)
+            {
+                throw new QuantidadeMaximaTarefaPorProjetoException();
+            }
+            return Task.FromResult(false);
         }
     }
 }

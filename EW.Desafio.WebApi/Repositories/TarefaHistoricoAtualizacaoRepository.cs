@@ -9,17 +9,8 @@ namespace EW.Desafio.WebApi.Repositories
 
         public async Task Salvar(TarefaHistoricoAtualizacao tarefaHistoricoAtualizacao)
         {
-            try
-            {
-                _context.TarefaHistoricoAtualizacoes.Add(tarefaHistoricoAtualizacao);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                var teste = ex.Message;
-            }
-
-
+            _context.TarefaHistoricoAtualizacoes.Add(tarefaHistoricoAtualizacao);
+            await _context.SaveChangesAsync();
         }
     }
 }

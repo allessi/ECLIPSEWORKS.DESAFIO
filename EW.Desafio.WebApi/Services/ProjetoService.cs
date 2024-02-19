@@ -9,12 +9,16 @@ namespace EW.Desafio.WebApi.Services
     public class ProjetoService(
         ITarefaRepository tarefaRepository,
         IProjetoRepository projetoRepository,
-        IUsuarioRepository usuarioRepository)
+        IUsuarioRepository usuarioRepository,
+        ITarefaService tarefaService,
+        ITarefaHistoricoAtualizacaoService tarefaHistoricoAtualizacaoService)
         : BaseService, IProjetoService
     {
         private readonly ITarefaRepository _tarefaRepository = tarefaRepository;
         private readonly IProjetoRepository _projetoRepository = projetoRepository;
         private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
+        private readonly ITarefaService _tarefaService = tarefaService;
+        private readonly ITarefaHistoricoAtualizacaoService _tarefaHistoricoAtualizacaoService = tarefaHistoricoAtualizacaoService;
 
         public async Task<ActionResult<Projeto>> ObtenhaProjetoPeloId(long id)
         {
@@ -105,11 +109,17 @@ namespace EW.Desafio.WebApi.Services
                     return BadRequest("O Id do usuário deve ser informado.");
                 }
 
+                // valida se a quantidade máxima de tarefas por projeto foi estrapolada.
+                _ = _tarefaService.PassouQuantidadeMaximaDeTarefasPermitidasNoProjeto(projeto);
+
                 // valida usuário existe
                 _ = await _usuarioRepository.ObtenhaUsuarioPeloId(projeto.UsuarioId);
 
                 // cadastra projeto
                 await _projetoRepository.Cadastrar(projeto);
+
+                // salva atualização de cadastro de tarefas, quando houver
+                await AtualizeHistoricoDeTarefas(projeto.Tarefas);
 
                 return CreatedAtAction("GetProjeto", new { id = projeto.Id }, projeto);
             }
@@ -117,9 +127,30 @@ namespace EW.Desafio.WebApi.Services
             {
                 return NotFound(ex.Message);
             }
+            catch (QuantidadeMaximaTarefaPorProjetoException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception)
             {
                 return DefaultError();
+            }
+        }
+
+        private async Task AtualizeHistoricoDeTarefas(ICollection<Tarefa>? tarefas, bool excluindo = false)
+        {
+            if (tarefas == null) return;
+
+            foreach (var tarefa in tarefas)
+            {
+                if (excluindo)
+                {
+                    await _tarefaHistoricoAtualizacaoService.SalvarHistorico(tarefa, null);
+                }
+                else
+                {
+                    await _tarefaHistoricoAtualizacaoService.SalvarHistorico(null, tarefa);
+                }
             }
         }
 
@@ -135,6 +166,9 @@ namespace EW.Desafio.WebApi.Services
 
                 // efetua a exclusão
                 await _projetoRepository.Deletar(projeto);
+
+                // salva atualização de cadastro de tarefas, quando houver
+                await AtualizeHistoricoDeTarefas(projeto.Tarefas, true);
 
                 return NoContent();
             }

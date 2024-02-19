@@ -14,5 +14,6 @@ namespace EW.Desafio.WebApi.Services
         Task<IActionResult> AlterarStatusTarefa(long id, Status status);
         Task<IActionResult> AlterarDescricaoTarefa(long id, string descricao);
         Task<IActionResult> DeletarTarefa(long id);
+        Task<bool> PassouQuantidadeMaximaDeTarefasPermitidasNoProjeto(Projeto projeto);
     }
 }

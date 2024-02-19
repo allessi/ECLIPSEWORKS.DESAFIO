@@ -67,6 +67,5 @@ namespace EW.Desafio.WebApi.Services
                 Alteracao = alteracao
             };
         }
-
     }
 }
