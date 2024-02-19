@@ -136,6 +136,7 @@ namespace EW.Desafio.WebApi.Services
                     return BadRequest("O projeto da tarefa não pode ser alterado.");
                 }
 
+                tarefa.UsuarioId = dadosTarefa.UsuarioId;
                 tarefa.Titulo = dadosTarefa.Titulo;
                 tarefa.Descricao = dadosTarefa.Descricao;
                 tarefa.DataVencimento = dadosTarefa.DataVencimento;

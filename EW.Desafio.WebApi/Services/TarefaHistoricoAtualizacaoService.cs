@@ -39,21 +39,25 @@ namespace EW.Desafio.WebApi.Services
                 }
                 else
                 {
+                    if (tarefaAntes.UsuarioId != tarefaDepois.UsuarioId)
+                    {
+                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id}. Usuário alterado - De: {tarefaAntes.UsuarioId} - Para: {tarefaDepois.UsuarioId}", tarefaAntes, tarefaDepois));
+                    }
                     if (tarefaAntes.Titulo != tarefaDepois.Titulo)
                     {
-                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id} alterada. De: {tarefaAntes.Titulo} - Para: {tarefaDepois.Titulo}", tarefaAntes, tarefaDepois));
+                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id}. Título alterado - De: {tarefaAntes.Titulo} - Para: {tarefaDepois.Titulo}", tarefaAntes, tarefaDepois));
                     }
                     if (tarefaAntes.Descricao != tarefaDepois.Descricao)
                     {
-                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id} alterada. De: {tarefaAntes.Descricao} - Para: {tarefaDepois.Descricao}", tarefaAntes, tarefaDepois));
+                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id}. Descrição alterado - De: {tarefaAntes.Descricao} - Para: {tarefaDepois.Descricao}", tarefaAntes, tarefaDepois));
                     }
                     if (tarefaAntes.Status != tarefaDepois.Status)
                     {
-                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id} alterada. De: {tarefaAntes.Status} - Para: {tarefaDepois.Status}", tarefaAntes, tarefaDepois));
+                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id}. Status alterado - De: {tarefaAntes.Status} - Para: {tarefaDepois.Status}", tarefaAntes, tarefaDepois));
                     }
                     if (tarefaAntes.DataVencimento != tarefaDepois.DataVencimento)
                     {
-                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id} alterada. De: {tarefaAntes.DataVencimento} - Para: {tarefaDepois.DataVencimento}", tarefaAntes, tarefaDepois));
+                        listaAlteracoes.Add(TarefaHistoricoAtualizacao($"Tarefa: {tarefaDepois.Id}. Data de vencimento alterado - De: {tarefaAntes.DataVencimento} - Para: {tarefaDepois.DataVencimento}", tarefaAntes, tarefaDepois));
                     }
                 }
 
