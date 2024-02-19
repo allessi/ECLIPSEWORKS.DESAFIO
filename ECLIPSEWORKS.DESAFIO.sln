@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EW.Desafio.WebApi", "EW.Des
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{670D5DC6-6796-4761-AB79-DBFC14A26367}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EW.Desafio.WebApi.Tests", "EW.Desafio.WebApi.Tests\EW.Desafio.WebApi.Tests.csproj", "{A8EE7A21-B2A8-49F7-8398-D0B1182999D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{E2C3E911-1677-4BE3-B305-96CA22C7E7C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2C3E911-1677-4BE3-B305-96CA22C7E7C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2C3E911-1677-4BE3-B305-96CA22C7E7C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8EE7A21-B2A8-49F7-8398-D0B1182999D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8EE7A21-B2A8-49F7-8398-D0B1182999D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8EE7A21-B2A8-49F7-8398-D0B1182999D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8EE7A21-B2A8-49F7-8398-D0B1182999D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E2C3E911-1677-4BE3-B305-96CA22C7E7C6} = {F27EA491-F669-4F51-B8E3-5B233C2B91EB}
+		{A8EE7A21-B2A8-49F7-8398-D0B1182999D8} = {670D5DC6-6796-4761-AB79-DBFC14A26367}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B157AF1-69C1-4BCF-B02E-5F3DFCE5018F}
